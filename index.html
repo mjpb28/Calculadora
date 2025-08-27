@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoCalculator - Pegada Ecológica</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #000000;
+            --primary-light: #333333;
+            --primary-dark: #000000;
+            --secondary: #f8f9fa;
+            --accent: #666666;
+            --accent-light: #888888;
+            --success: #000000;
+            --warning: #333333;
+            --danger: #000000;
+            --dark: #000000;
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #171717;
+            --text: #000000;
+            --text-light: #525252;
+            --text-muted: #737373;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--white);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: var(--white);
+            color: var(--text);
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--white);
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            padding: 60px 40px;
+        }
+        
+        .intro-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            padding: 40px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        
+        .intro-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+            color: var(--white);
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--text);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 20px;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text);
+            margin: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: var(--text);
+            font-size: 1rem;
+            letter-spacing: -0.01em;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid var(--gray-300);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+        
+        select:focus, input:focus {
+            border-color: var(--text);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        select:hover, input:hover {
+            border-color: var(--gray-400);
+        }
+        
+        .btn {
+            background: var(--text);
+            color: var(--white);
+            border: 1px solid var(--text);
+            padding: 20px 40px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            margin: 60px 0 40px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            letter-spacing: -0.01em;
+        }
+        
+        .btn:hover {
+            background: var(--white);
+            color: var(--text);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .progress-container {
+            margin: 40px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--gray-200);
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--text);
+            width: 0%;
+            transition: width 1s ease;
+        }
+        
+        .result {
+            display: none;
+            margin-top: 60px;
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .result-icon {
+            width: 100px;
+            height: 100px;
+            background: var(--text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 32px;
+            font-size: 40px;
+            color: var(--white);
+        }
+        
+        .result h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text);
+            margin-bottom: 24px;
+            font-size: 2rem;
+            font-weight: 500;
+        }
+        
+        .carbon-value {
+            font-size: 4rem;
+            font-weight: 300;
+            color: var(--text);
+            margin: 32px 0;
+            letter-spacing: -0.02em;
+        }
+        
+        .impact-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            border: 1px solid var(--gray-300);
+            font-weight: 500;
+            margin: 24px 0;
+            font-size: 1.1rem;
+            background: var(--white);
+            color: var(--text);
+        }
+        
+        .low { 
+            border-color: var(--text);
+            background: var(--text);
+            color: var(--white);
+        }
+        .medium { 
+            border-color: var(--gray-400);
+            background: var(--gray-400);
+            color: var(--white);
+        }
+        .high { 
+            border-color: var(--gray-600);
+            background: var(--gray-600);
+            color: var(--white);
+        }
+        
+        .comparison-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            padding: 40px;
+            margin: 40px 0;
+        }
+        
+        .comparison-card h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .tip-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .tip-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--text);
+        }
+        
+        .tip-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: var(--white);
+        }
+        
+        .tip-card h5 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text);
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .tip-card p {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .footer {
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .container {
+                border: none;
+            }
+            
+            .header {
+                padding: 40px 20px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content {
+                padding: 40px 20px;
+            }
+            
+            .section {
+                padding: 30px 20px;
+            }
+            
+            .intro-card {
+                padding: 30px 20px;
+            }
+            
+            .result-card {
+                padding: 40px 20px;
+            }
+            
+            .comparison-card {
+                padding: 30px 20px;
+            }
+            
+            .carbon-value {
+                font-size: 3rem;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .tip-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🌱</div>
+                </div>
+                <h1>EcoCalculator</h1>
+                <p class="subtitle">Descubra e reduza sua pegada ecológica</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="intro-card">
+                <div class="intro-icon">🌍</div>
+                <p>Calcule o impacto das suas atividades diárias no meio ambiente e descubra como viver de forma mais sustentável.</p>
+            </div>
+
+            <form id="carbonForm">
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-icon">🚗</div>
+                        <h2 class="section-title">Transporte</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="transport">Meio de transporte principal:</label>
+                        <select id="transport" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="car">🚗 Carro próprio</option>
+                            <option value="public">🚌 Transporte público</option>
+                            <option value="bike">🚴 Bicicleta/A pé</option>
+                            <option value="motorcycle">🏍️ Motocicleta</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="distance">Distância percorrida por semana (km):</label>
+                        <input type="number" id="distance" min="0" max="2000" placeholder="Ex: 150" required>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-icon">⚡</div>
+                        <h2 class="section-title">Energia Doméstica</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="electricity">Consumo mensal de eletricidade (kWh):</label>
+                        <input type="number" id="electricity" min="0" max="2000" placeholder="Ex: 300" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="heating">Tipo de aquecimento:</label>
+                        <select id="heating" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="gas">🔥 Gás natural</option>
+                            <option value="electric">⚡ Elétrico</option>
+                            <option value="oil">🛢️ Óleo combustível</option>
+                            <option value="renewable">🌞 Energia renovável</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-icon">🥗</div>
+                        <h2 class="section-title">Alimentação</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="diet">Tipo de dieta:</label>
+                        <select id="diet" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="meat">🥩 Rica em carne</option>
+                            <option value="moderate">🍗 Moderada em carne</option>
+                            <option value="vegetarian">🥬 Vegetariana</option>
+                            <option value="vegan">🌱 Vegana</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-icon">♻️</div>
+                        <h2 class="section-title">Gestão de Resíduos</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="waste">Frequência de reciclagem:</label>
+                        <select id="waste" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="never">❌ Nunca</option>
+                            <option value="sometimes">🟡 Às vezes</option>
+                            <option value="often">🟢 Frequentemente</option>
+                            <option value="always">✅ Sempre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">
+                    <span>🧮</span>
+                    Calcular Pegada Ecológica
+                </button>
+            </form>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="result" id="result">
+                <div class="result-card">
+                    <div class="result-icon">🌍</div>
+                    <h3>Sua Pegada de Carbono Anual</h3>
+                    <div class="carbon-value" id="carbonValue">0 kg CO₂</div>
+                    <div class="impact-level" id="impactLevel">
+                        <span>🌱</span>
+                        Baixo Impacto
+                    </div>
+                </div>
+                
+                <div class="comparison-card">
+                    <h4>📊 Comparação Global</h4>
+                    <p id="comparisonText">Sua pegada está sendo calculada...</p>
+                </div>
+                
+                <div class="tips-grid" id="tipsGrid">
+                    <!-- Tips will be generated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-content">
+                <span>🌍</span>
+                <span>Cada pequena ação conta para um planeta mais sustentável</span>
+                <span>🌱</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('carbonForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateCarbonFootprint();
+        });
+
+        function calculateCarbonFootprint() {
+            // Get form values
+            const transport = document.getElementById('transport').value;
+            const distance = parseFloat(document.getElementById('distance').value) || 0;
+            const electricity = parseFloat(document.getElementById('electricity').value) || 0;
+            const heating = document.getElementById('heating').value;
+            const diet = document.getElementById('diet').value;
+            const waste = document.getElementById('waste').value;
+
+            let totalCarbon = 0;
+
+            // Transport calculations (kg CO2 per year)
+            const transportFactors = {
+                'car': 0.21, // kg CO2 per km
+                'public': 0.05,
+                'bike': 0,
+                'motorcycle': 0.15
+            };
+            totalCarbon += (distance * 52 * (transportFactors[transport] || 0));
+
+            // Electricity (kg CO2 per year)
+            totalCarbon += (electricity * 12 * 0.5); // 0.5 kg CO2 per kWh
+
+            // Heating (kg CO2 per year)
+            const heatingFactors = {
+                'gas': 2000,
+                'electric': 1500,
+                'oil': 3000,
+                'renewable': 200
+            };
+            totalCarbon += (heatingFactors[heating] || 0);
+
+            // Diet (kg CO2 per year)
+            const dietFactors = {
+                'meat': 2500,
+                'moderate': 1800,
+                'vegetarian': 1200,
+                'vegan': 800
+            };
+            totalCarbon += (dietFactors[diet] || 0);
+
+            // Waste (kg CO2 per year)
+            const wasteFactors = {
+                'never': 500,
+                'sometimes': 300,
+                'often': 150,
+                'always': 50
+            };
+            totalCarbon += (wasteFactors[waste] || 0);
+
+            displayResults(totalCarbon);
+        }
+
+        function displayResults(carbonFootprint) {
+            const resultDiv = document.getElementById('result');
+            const carbonValue = document.getElementById('carbonValue');
+            const impactLevel = document.getElementById('impactLevel');
+            const comparisonText = document.getElementById('comparisonText');
+            const progressFill = document.getElementById('progressFill');
+
+            // Display carbon footprint with animation
+            setTimeout(() => {
+                carbonValue.textContent = `${Math.round(carbonFootprint).toLocaleString('pt-BR')} kg CO₂`;
+            }, 300);
+
+            // Determine impact level
+            let level, levelClass, progressPercent, icon;
+            if (carbonFootprint < 4000) {
+                level = 'Baixo Impacto';
+                levelClass = 'low';
+                progressPercent = 25;
+                icon = '🌱';
+            } else if (carbonFootprint < 8000) {
+                level = 'Impacto Moderado';
+                levelClass = 'medium';
+                progressPercent = 60;
+                icon = '⚠️';
+            } else {
+                level = 'Alto Impacto';
+                levelClass = 'high';
+                progressPercent = 100;
+                icon = '🚨';
+            }
+
+            impactLevel.innerHTML = `<span>${icon}</span>${level}`;
+            impactLevel.className = `impact-level ${levelClass}`;
+
+            // Comparison with averages
+            const worldAverage = 4800;
+            const portugalAverage = 5200;
+            
+            let comparison = '';
+            if (carbonFootprint < worldAverage) {
+                comparison = `🎉 Parabéns! Sua pegada está ${Math.round(((worldAverage - carbonFootprint) / worldAverage) * 100)}% abaixo da média mundial (${worldAverage.toLocaleString('pt-BR')} kg CO₂).`;
+            } else {
+                comparison = `📈 Sua pegada está ${Math.round(((carbonFootprint - worldAverage) / worldAverage) * 100)}% acima da média mundial (${worldAverage.toLocaleString('pt-BR')} kg CO₂).`;
+            }
+            
+            comparisonText.textContent = comparison;
+
+            // Update progress bar with animation
+            setTimeout(() => {
+                progressFill.style.width = `${progressPercent}%`;
+            }, 500);
+
+            // Generate personalized tips
+            generateTips();
+
+            // Show results with animation
+            resultDiv.style.display = 'block';
+            setTimeout(() => {
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        function generateTips() {
+            const transport = document.getElementById('transport').value;
+            const heating = document.getElementById('heating').value;
+            const diet = document.getElementById('diet').value;
+            const waste = document.getElementById('waste').value;
+            
+            const tipsGrid = document.getElementById('tipsGrid');
+            const tips = [];
+
+            // Transport tips
+            if (transport === 'car') {
+                tips.push({
+                    icon: '🚌',
+                    title: 'Transporte Sustentável',
+                    text: 'Use transporte público, bicicleta ou caminhe para trajetos curtos. Considere carpool ou veículos elétricos.'
+                });
+            }
+
+            // Energy tips
+            if (heating === 'oil' || heating === 'gas') {
+                tips.push({
+                    icon: '🏠',
+                    title: 'Eficiência Energética',
+                    text: 'Invista em isolamento térmico e considere mudar para energia renovável quando possível.'
+                });
+            }
+
+            // Diet tips
+            if (diet === 'meat') {
+                tips.push({
+                    icon: '🥬',
+                    title: 'Alimentação Consciente',
+                    text: 'Reduza o consumo de carne vermelha 1-2 dias por semana e prefira produtos locais e sazonais.'
+                });
+            }
+
+            // Waste tips
+            if (waste === 'never' || waste === 'sometimes') {
+                tips.push({
+                    icon: '♻️',
+                    title: 'Gestão de Resíduos',
+                    text: 'Implemente a separação de resíduos e reutilize embalagens. Evite produtos com excesso de plástico.'
+                });
+            }
+
+            // Add general tips
+            tips.push(
+                {
+                    icon: '💡',
+                    title: 'Economia de Energia',
+                    text: 'Desligue aparelhos eletrônicos quando não usar e prefira lâmpadas LED e eletrodomésticos eficientes.'
+                },
+                {
+                    icon: '🌳',
+                    title: 'Compensação Ambiental',
+                    text: 'Plante árvores, apoie projetos de reflorestamento ou invista em créditos de carbono.'
+                }
+            );
+
+            // Generate tip cards
+            const tipCards = tips.slice(0, 6).map(tip => `
+                <div class="tip-card">
+                    <div class="tip-icon">${tip.icon}</div>
+                    <h5>${tip.title}</h5>
+                    <p>${tip.text}</p>
+                </div>
+            `).join('');
+
+            tipsGrid.innerHTML = tipCards;
+        }
+
+        // Add form validation feedback with modern styling
+        document.querySelectorAll('select, input').forEach(element => {
+            element.addEventListener('change', function() {
+                if (this.value) {
+                    this.style.borderColor = 'var(--primary)';
+                    this.style.backgroundColor = 'var(--secondary)';
+                } else {
+                    this.style.borderColor = 'var(--gray-200)';
+                    this.style.backgroundColor = 'var(--white)';
+                }
+            });
+
+            element.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+
+            element.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Add loading animation to button
+        document.getElementById('carbonForm').addEventListener('submit', function(e) {
+            const button = this.querySelector('.btn');
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<span>⏳</span>Calculando...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1000);
+        });
+
+        // Add smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add entrance animation to sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'all 0.6s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975bd81d141a5bea',t:'MTc1NjMwMDU5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
